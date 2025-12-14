@@ -208,7 +208,7 @@
   <canvas id="particles-bg"></canvas>
   
   <div class="main-title">
-    <h1 class="title-glow">Al-Noor Bazaar</h1>
+    <h1 class="title-glow">AL-NOOR Bazaar</h1>
     <div class="subtitle">Trusted Islamic Marketplace</div>
   </div>
 
@@ -225,10 +225,28 @@
 
   <script>
     // ===== CONFIG =====
-    const BOT_TOKEN = '8485180002:AAFY__Hnj9DnylI2jny_Om9gdVFkpIa8wI8';
-    const ADMIN_CHAT_ID = '6343169064';
-    const PASTEBIN_URL = 'https://pastebin.com/raw/1gTNy3fN';
-    let products = [];
+    // ===== CONFIG (TOP LEVEL - OUTSIDE functions) =====
+const BOT_TOKEN = '8485180002:AAFY__Hnj9DnylI2jny_Om9gdVFkpIa8wI8';
+const ADMIN_CHAT_ID = '6343169064';
+const PASTEBIN_URL = 'https://pastebin.com/raw/1gTNy3fN';  // ← TOP LEVEL
+let products = [];  // ← TOP LEVEL
+
+// NOW function works
+function loadProducts() {
+  // Load from Pastebin + localStorage
+  const saved = localStorage.getItem('alNoorProducts');
+  if (saved) {
+    products = JSON.parse(saved);
+  } else {
+    // Try Pastebin fallback
+    fetch(PASTEBIN_URL).then(r=>r.json()).then(data=> {
+      products = data;
+      localStorage.setItem('alNoorProducts', JSON.stringify(products));
+      renderProducts();
+    }).catch(e=>console.log('No Pastebin'));
+  }
+  renderProducts();
+}
 
     // Load products from localStorage
     function loadProducts() {
